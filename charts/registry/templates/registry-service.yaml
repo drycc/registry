@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: deis-registry
+  name: drycc-registry
   labels:
-    heritage: deis
+    heritage: drycc
 spec:
   ports:
     - name: http
       port: 80
       targetPort: 5000
   selector:
-    app: deis-registry
+    app: drycc-registry
   sessionAffinity: ClientIP  
 {{- end }}

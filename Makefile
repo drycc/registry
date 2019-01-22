@@ -7,21 +7,21 @@ SHORT_NAME := registry
 include includes.mk versioning.mk
 
 # the filepath to this repository, relative to $GOPATH/src
-REPO_PATH = github.com/deis/registry
+REPO_PATH = github.com/drycc/registry
 
 SHELL_SCRIPTS = $(wildcard _scripts/*.sh contrib/ci/*.sh)
 
 # The following variables describe the containerized development environment
 # and other build options
-DEV_ENV_IMAGE := quay.io/deis/go-dev:0.20.0
+DEV_ENV_IMAGE := quay.io/drycc/go-dev:v0.22.0
 DEV_ENV_WORK_DIR := /go/src/${REPO_PATH}
 DEV_ENV_PREFIX := docker run --rm -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_WORK_DIR}
 DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
 LDFLAGS := "-s -w -X main.version=${VERSION}"
 BINDIR := ./rootfs/opt/registry/sbin
 
-# Legacy support for DEV_REGISTRY, plus new support for DEIS_REGISTRY.
-DEIS_REGISTRY ?= ${DEV_REGISTRY}
+# Legacy support for DEV_REGISTRY, plus new support for DRYCC_REGISTRY.
+DRYCC_REGISTRY ?= ${DEV_REGISTRY}
 
 ifeq ($(STORAGE_TYPE),)
   STORAGE_TYPE = fs
@@ -52,6 +52,6 @@ test-style:
 	${DEV_ENV_CMD} shellcheck $(SHELL_SCRIPTS)
 
 deploy: check-kubectl docker-build docker-push
-	kubectl --namespace=deis patch deployment deis-$(SHORT_NAME) --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value":"$(IMAGE)"}]'
+	kubectl --namespace=drycc patch deployment drycc-$(SHORT_NAME) --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value":"$(IMAGE)"}]'
 
 .PHONY: all build build-binary docker-build test test-style deploy

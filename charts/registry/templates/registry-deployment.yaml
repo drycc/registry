@@ -2,11 +2,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: deis-registry
+  name: drycc-registry
   labels:
-    heritage: deis
+    heritage: drycc
   annotations:
-    component.deis.io/version: {{ .Values.docker_tag }}
+    component.drycc.cc/version: {{ .Values.docker_tag }}
 spec:
   replicas: 1
   strategy:
@@ -16,15 +16,15 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: deis-registry
+      app: drycc-registry
   template:
     metadata:
       labels:
-        app: deis-registry
+        app: drycc-registry
     spec:
-      serviceAccount: deis-registry
+      serviceAccount: drycc-registry
       containers:
-        - name: deis-registry
+        - name: drycc-registry
           image: quay.io/{{.Values.org}}/registry:{{.Values.docker_tag}}
           imagePullPolicy: {{.Values.pull_policy}}
 {{- if or (.Values.limits_cpu) (.Values.limits_memory)}}
@@ -62,7 +62,7 @@ spec:
             - name: registry-storage
               mountPath: /var/lib/registry
             - name: objectstorage-creds
-              mountPath: /var/run/secrets/deis/registry/creds
+              mountPath: /var/run/secrets/drycc/registry/creds
       volumes:
         - name: registry-storage
           emptyDir: {}
