@@ -25,7 +25,7 @@ spec:
       serviceAccount: drycc-registry
       containers:
         - name: drycc-registry
-          image: quay.io/{{.Values.org}}/registry:{{.Values.docker_tag}}
+          image: {{.Values.docker_registry}}{{.Values.org}}/registry:{{.Values.docker_tag}}
           imagePullPolicy: {{.Values.pull_policy}}
 {{- if or (.Values.limits_cpu) (.Values.limits_memory)}}
           resources:
