@@ -62,7 +62,7 @@ spec:
             - name: registry-storage
               mountPath: /var/lib/registry
             - name: objectstorage-creds
-              mountPath: /var/run/secrets/drycc/registry/creds
+              mountPath: /var/run/secrets/drycc/objectstore/creds
       volumes:
         - name: registry-storage
           emptyDir: {}
