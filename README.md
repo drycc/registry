@@ -1,9 +1,3 @@
-
-|![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png) | Drycc Workflow will soon no longer be maintained.<br />Please [read the announcement](https://drycc.com/blog/2017/drycc-workflow-final-release/) for more detail. |
-|---:|---|
-| 09/07/2017 | Drycc Workflow [v2.18][] final release before entering maintenance mode |
-| 03/01/2018 | End of Workflow maintenance: critical patches no longer merged |
-
 # Drycc Registry v2
 
 [![Build Status](https://ci.drycc.cc/job/registry/badge/icon)](https://ci.drycc.cc/job/registry)
