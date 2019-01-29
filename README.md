@@ -1,6 +1,6 @@
 # Drycc Registry v2
 
-[![Build Status](https://ci.drycc.cc/job/registry/badge/icon)](https://ci.drycc.cc/job/registry)
+[![Build Status](https://travis-ci.org/drycc/registry.svg?branch=master)](https://travis-ci.org/drycc/registry)
 [![Go Report Card](https://goreportcard.com/badge/github.com/drycc/registry)](https://goreportcard.com/report/github.com/drycc/registry)
 [![Docker Repository on Quay](https://quay.io/repository/drycc/registry/status "Docker Repository on Quay")](https://quay.io/repository/drycc/registry)
 
