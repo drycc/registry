@@ -54,8 +54,6 @@ spec:
               value: "true"
             - name: REGISTRY_LOG_LEVEL
               value: info
-            - name: REGISTRY_STORAGE
-              value: "{{ .Values.global.storage }}"
           ports:
             - containerPort: 5000
           volumeMounts:
