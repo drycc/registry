@@ -10,12 +10,16 @@ echo "registry-bucket" > "${CURRENT_DIR}"/tmp/aws-user/registry-bucket
 echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/accesskey
 echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/secretkey
 
-MINIO_JOB=$(docker run -d \
+MINIO_JOB=$(docker run -d --name minio \
   -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
-  quay.io/drycc/minio:canary server /home/minio/)
+  drycc/minio:canary server /home/minio/)
 
+sleep 5
+docker logs "${MINIO_JOB}"
 
-JOB=$(docker run -d \
+JOB=$(docker run -d --link minio:minio \
+  -e DRYCC_MINIO_SERVICE_HOST=minio \
+  -e DRYCC_MINIO_SERVICE_PORT=9000 \
   -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
   "$1")
 

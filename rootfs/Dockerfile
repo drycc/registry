@@ -1,4 +1,4 @@
-FROM minio/mc:RELEASE.2019-05-23T01-33-27Z as mc
+FROM minio/mc:RELEASE.2020-07-17T02-52-20Z as mc
 
 FROM registry:2.7
 
