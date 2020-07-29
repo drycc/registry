@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/drycc/registry.svg?branch=master)](https://travis-ci.org/drycc/registry)
 [![Go Report Card](https://goreportcard.com/badge/github.com/drycc/registry)](https://goreportcard.com/report/github.com/drycc/registry)
-[![Docker Repository on Quay](https://quay.io/repository/drycc/registry/status "Docker Repository on Quay")](https://quay.io/repository/drycc/registry)
 
 
 Drycc (pronounced DAY-iss) is an open source PaaS that makes it easy to deploy and manage
@@ -43,7 +42,7 @@ To build a dev release of this image, you will also need a registry to hold the 
 First, configure your environment to point to the registry location.
 
 ```console
-$ export DRYCC_REGISTRY=myregistry.com:5000  # or quay.io, if using Dockerhub, leave this unset
+$ export DRYCC_REGISTRY=myregistry.com:5000  # if using Dockerhub, leave this unset
 $ export IMAGE_PREFIX=youruser/             # if using Quay or Dockerhub
 ```
 
