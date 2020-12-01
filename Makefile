@@ -3,6 +3,7 @@
 # - Docker image name
 # - Kubernetes service, deployment, pod names
 SHORT_NAME := registry
+PLATFORM ?= linux/amd64,linux/arm64
 
 include includes.mk versioning.mk
 
@@ -36,9 +37,12 @@ build: check-docker
 
 # For cases where we're building from local
 # We also alter the RC file to set the image name.
-docker-build: check-docker build
-	docker build ${DOCKER_BUILD_FLAGS} -t ${IMAGE} rootfs
+docker-build: check-docker
+	docker build ${DOCKER_BUILD_FLAGS} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} .
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
+
+docker-buildx: check-docker
+	docker buildx build --platform ${PLATFORM} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} . --push
 
 build-binary:
 	${DEV_ENV_CMD} go build -ldflags ${LDFLAGS} -o $(BINDIR)/${SHORT_NAME} main.go
