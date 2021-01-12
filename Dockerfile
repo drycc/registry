@@ -1,7 +1,7 @@
-FROM minio/mc:latest as mc
+FROM docker.io/minio/mc:latest as mc
 
 
-FROM drycc/go-dev:latest AS build
+FROM docker.io/drycc/go-dev:latest AS build
 ARG LDFLAGS
 ADD . /app
 RUN export GO111MODULE=on \
@@ -10,7 +10,7 @@ RUN export GO111MODULE=on \
   && upx -9 --brute /usr/local/bin/registry
 
 
-FROM registry:2.7
+FROM docker.io/library/registry:2.7
 
 COPY rootfs /
 COPY --from=mc /usr/bin/mc /bin/mc
