@@ -3,6 +3,7 @@
 # - Docker image name
 # - Kubernetes service, deployment, pod names
 SHORT_NAME := registry
+DRYCC_REGISTRY ?= ${DEV_REGISTRY}
 PLATFORM ?= linux/amd64,linux/arm64
 
 include includes.mk versioning.mk
@@ -20,9 +21,6 @@ DEV_ENV_PREFIX := docker run --rm -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_
 DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
 LDFLAGS := "-s -w -X main.version=${VERSION}"
 BINDIR := ./rootfs/opt/registry/sbin
-
-# Legacy support for DEV_REGISTRY, plus new support for DRYCC_REGISTRY.
-DRYCC_REGISTRY ?= ${DEV_REGISTRY}
 
 ifeq ($(STORAGE_TYPE),)
   STORAGE_TYPE = fs
