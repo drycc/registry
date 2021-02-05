@@ -17,7 +17,10 @@ MINIO_JOB=$(docker run -d --name minio \
 sleep 5
 docker logs "${MINIO_JOB}"
 
-JOB=$(docker run -d --link minio:minio \
+MINIO_IP=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" "${MINIO_JOB}")
+
+JOB=$(docker run --add-host minio:"${MINIO_IP}" \
+  -d \
   -e DRYCC_MINIO_SERVICE_HOST=minio \
   -e DRYCC_MINIO_SERVICE_PORT=9000 \
   -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
