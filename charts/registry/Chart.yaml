@@ -1,6 +1,6 @@
 name: registry
 home: https://github.com/drycc/registry
-version: <Will be populated by the ci before publishing the chart>
+version: v1.0.0
 description: Docker registry for Drycc Workflow.
 maintainers:
   - name: Drycc Team
