@@ -23,44 +23,53 @@ spec:
         app: drycc-registry
     spec:
       serviceAccount: drycc-registry
+      initContainers:
+      - name: drycc-registry-init
+        image: docker.io/drycc/python-dev:latest
+        imagePullPolicy: {{.Values.image_pull_policy}}
+        command:
+          - netcat
+          - -v
+          - -a
+          - $(DRYCC_MINIO_SERVICE_HOST):$(DRYCC_MINIO_SERVICE_PORT)
       containers:
-        - name: drycc-registry
-          image: {{.Values.image_registry}}/{{.Values.image_org}}/registry:{{.Values.image_tag}}
-          imagePullPolicy: {{.Values.image_pull_policy}}
+      - name: drycc-registry
+        image: {{.Values.image_registry}}/{{.Values.image_org}}/registry:{{.Values.image_tag}}
+        imagePullPolicy: {{.Values.image_pull_policy}}
 {{- if or (.Values.limits_cpu) (.Values.limits_memory)}}
-          resources:
-            limits:
+        resources:
+          limits:
 {{- if (.Values.limits_cpu) }}
-              cpu: {{.Values.limits_cpu}}
+            cpu: {{.Values.limits_cpu}}
 {{- end}}
 {{- if (.Values.limits_memory) }}
-              memory: {{.Values.limits_memory}}
+            memory: {{.Values.limits_memory}}
 {{- end}}
 {{- end}}
-          livenessProbe:
-            httpGet:
-              path: /v2/
-              port: 5000
-            initialDelaySeconds: 1
-            timeoutSeconds: 1
-          readinessProbe:
-            httpGet:
-              path: /v2/
-              port: 5000
-            initialDelaySeconds: 1
-            timeoutSeconds: 1
-          env:
-            - name: REGISTRY_STORAGE_DELETE_ENABLED
-              value: "true"
-            - name: REGISTRY_LOG_LEVEL
-              value: info
-          ports:
-            - containerPort: 5000
-          volumeMounts:
-            - name: registry-storage
-              mountPath: /var/lib/registry
-            - name: objectstorage-creds
-              mountPath: /var/run/secrets/drycc/objectstore/creds
+        livenessProbe:
+          httpGet:
+            path: /v2/
+            port: 5000
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /v2/
+            port: 5000
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        env:
+          - name: REGISTRY_STORAGE_DELETE_ENABLED
+            value: "true"
+          - name: REGISTRY_LOG_LEVEL
+            value: info
+        ports:
+          - containerPort: 5000
+        volumeMounts:
+          - name: registry-storage
+            mountPath: /var/lib/registry
+          - name: objectstorage-creds
+            mountPath: /var/run/secrets/drycc/objectstore/creds
       volumes:
         - name: registry-storage
           emptyDir: {}
