@@ -12,7 +12,7 @@ echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/
 
 MINIO_JOB=$(docker run -d --name minio \
   -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
-  drycc/minio:canary server /home/minio/)
+  drycc/minio:canary server /data/minio/)
 
 sleep 5
 docker logs "${MINIO_JOB}"
