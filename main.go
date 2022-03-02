@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	registryBinary  = "/bin/registry"
+	registryBinary  = "/opt/drycc/registry/bin/registry"
 	registryConfig  = "/etc/docker/registry/config.yml"
 	minioHostEnvVar = "DRYCC_MINIO_SERVICE_HOST"
 	minioPortEnvVar = "DRYCC_MINIO_SERVICE_PORT"
