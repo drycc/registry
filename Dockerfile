@@ -9,16 +9,16 @@ RUN export GO111MODULE=on \
 
 FROM docker.io/drycc/base:bullseye
 
-RUN adduser --system \
-   --shell /bin/bash \
-   --disabled-password \
-   --home /var/lib/registry \
-   --group \
-   drycc
+ARG DRYCC_UID=1001
+ARG DRYCC_GID=1001
+ARG DRYCC_HOME_DIR=/var/lib/registry
+
+RUN groupadd drycc --gid ${DRYCC_GID} \
+  && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR}
 
 COPY rootfs/bin/ /bin/
 COPY rootfs/config-example.yml /etc/docker/registry/config.yml
-COPY --from=build /usr/local/bin/registry /opt/registry/sbin/registry
+COPY --from=build /usr/local/bin/registry /opt/registry/bin/registry
 ENV JQ_VERSION="1.6" \
   MC_VERSION="2022.02.26.03.58.31" \
   REGISTRY_VERSION="2.8.0"
@@ -41,9 +41,9 @@ RUN install-stack jq $JQ_VERSION \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/IBM* \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/EBC* \
   && mkdir -p /usr/share/man/man{1..8} \
-  && chown -R drycc:drycc /var/lib/registry
+  && chown -R drycc:drycc ${DRYCC_HOME_DIR}
 
 USER drycc
-VOLUME ["/var/lib/registry"]
-CMD ["/opt/registry/sbin/registry"]
+VOLUME ["${DRYCC_HOME_DIR}"]
+CMD ["/opt/registry/bin/registry"]
 EXPOSE 5000
