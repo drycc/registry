@@ -9,21 +9,20 @@ RUN export GO111MODULE=on \
 
 FROM docker.io/drycc/base:bullseye
 
-ARG DRYCC_UID=1001
-ARG DRYCC_GID=1001
-ARG DRYCC_HOME_DIR=/var/lib/registry
-
-RUN groupadd drycc --gid ${DRYCC_GID} \
-  && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR}
+ENV DRYCC_UID=1001 \
+  DRYCC_GID=1001 \
+  DRYCC_HOME_DIR=/var/lib/registry \
+  JQ_VERSION="1.6" \
+  MC_VERSION="2022.02.26.03.58.31" \
+  REGISTRY_VERSION="2.8.0"
 
 COPY rootfs/bin/ /bin/
 COPY rootfs/config-example.yml /etc/docker/registry/config.yml
 COPY --from=build /usr/local/bin/registry /opt/registry/bin/registry
-ENV JQ_VERSION="1.6" \
-  MC_VERSION="2022.02.26.03.58.31" \
-  REGISTRY_VERSION="2.8.0"
 
-RUN install-stack jq $JQ_VERSION \
+RUN groupadd drycc --gid ${DRYCC_GID} \
+  && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR} \
+  && install-stack jq $JQ_VERSION \
   && install-stack mc $MC_VERSION \
   && install-stack registry $REGISTRY_VERSION \
   && chmod +x /bin/create_bucket /bin/normalize_storage \
@@ -41,9 +40,9 @@ RUN install-stack jq $JQ_VERSION \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/IBM* \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/EBC* \
   && mkdir -p /usr/share/man/man{1..8} \
-  && chown -R drycc:drycc ${DRYCC_HOME_DIR}
+  && chown -R ${DRYCC_GID}:${DRYCC_UID} ${DRYCC_HOME_DIR}
 
-USER drycc
+USER ${DRYCC_UID}
 VOLUME ["${DRYCC_HOME_DIR}"]
 CMD ["/opt/registry/bin/registry"]
 EXPOSE 5000
