@@ -22,6 +22,9 @@ spec:
       labels:
         app: drycc-registry
     spec:
+      {{- if .Values.global.common }}
+      {{- include "common.affinity" (dict "app" "drycc-registry") | indent 6 }}
+      {{- end }}
       serviceAccount: drycc-registry
       initContainers:
       - name: drycc-registry-init
