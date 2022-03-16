@@ -22,6 +22,9 @@ spec:
       labels:
         app: drycc-registry
     spec:
+      {{- if .Values.global.common }}
+      {{- include "common.affinity" (dict "key" "app" "values" (list "drycc-registry")) | indent 6 }}
+      {{- end }}
       serviceAccount: drycc-registry
       initContainers:
       - name: drycc-registry-init
@@ -70,9 +73,9 @@ spec:
             mountPath: /var/lib/registry
           - name: objectstorage-creds
             mountPath: /var/run/secrets/drycc/objectstore/creds
-      securityContext:                
-        fsGroup: 1001         
-        runAsGroup: 1001     
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
         runAsUser: 1001
       volumes:
         - name: registry-storage
