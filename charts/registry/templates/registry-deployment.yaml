@@ -22,7 +22,7 @@ spec:
       labels:
         app: drycc-registry
     spec:
-      {{- include "common.affinities.nodes.soft" (dict "key" "app" "values" (list "drycc-registry")) | indent 6 }}
+      {{- include "common.affinities.pods.soft" (dict "key" "app" "values" (list "drycc-registry")) | indent 6 }}
       serviceAccount: drycc-registry
       initContainers:
       - name: drycc-registry-init
