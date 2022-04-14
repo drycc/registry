@@ -1,4 +1,4 @@
-FROM docker.io/drycc/go-dev:latest AS build
+FROM registry.drycc.cc/drycc/go-dev:latest AS build
 ARG LDFLAGS
 ADD . /workspace
 RUN export GO111MODULE=on \
@@ -7,7 +7,7 @@ RUN export GO111MODULE=on \
   && upx -9 --brute /usr/local/bin/registry
 
 
-FROM docker.io/drycc/base:bullseye
+FROM registry.drycc.cc/drycc/base:bullseye
 
 ENV DRYCC_UID=1001 \
   DRYCC_GID=1001 \
