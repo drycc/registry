@@ -11,8 +11,8 @@ echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/
 echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/secretkey
 
 MINIO_JOB=$(docker run -d --name minio \
-  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
-  drycc/minio:canary server /data/minio/)
+  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/minio/creds \
+  "${DEV_REGISTRY}"/drycc/minio:canary server /data/minio/)
 
 sleep 5
 docker logs "${MINIO_JOB}"
@@ -21,9 +21,8 @@ MINIO_IP=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" "${MINIO_J
 
 JOB=$(docker run --add-host minio:"${MINIO_IP}" \
   -d \
-  -e DRYCC_MINIO_SERVICE_HOST=minio \
-  -e DRYCC_MINIO_SERVICE_PORT=9000 \
-  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/objectstore/creds \
+  -e DRYCC_MINIO_ENDPOINT=minio:9000 \
+  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/minio/creds \
   "$1")
 
 # let the registry run for a few seconds

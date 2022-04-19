@@ -32,21 +32,14 @@ spec:
           - netcat
           - -v
           - -a
-          - $(DRYCC_MINIO_SERVICE_HOST):$(DRYCC_MINIO_SERVICE_PORT)
+          - $(DRYCC_MINIO_ENDPOINT)
+        {{- include "builder.envs" . | indent 8 }}
       containers:
       - name: drycc-registry
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
-{{- if or (.Values.limitsCpu) (.Values.limitsMemory)}}
-        resources:
-          limits:
-{{- if (.Values.limitsCpu) }}
-            cpu: {{.Values.limitsCpu}}
-{{- end}}
-{{- if (.Values.limitsMemory) }}
-            memory: {{.Values.limitsMemory}}
-{{- end}}
-{{- end}}
+        {{- include "builder.limits" . | indent 8 }}
+        {{- include "builder.envs" . | indent 8 }}
         livenessProbe:
           httpGet:
             path: /v2/
@@ -69,8 +62,8 @@ spec:
         volumeMounts:
           - name: registry-storage
             mountPath: /var/lib/registry
-          - name: objectstorage-creds
-            mountPath: /var/run/secrets/drycc/objectstore/creds
+          - name: minio-creds
+            mountPath: /var/run/secrets/drycc/minio/creds
       securityContext:
         fsGroup: 1001
         runAsGroup: 1001
@@ -78,7 +71,7 @@ spec:
       volumes:
         - name: registry-storage
           emptyDir: {}
-        - name: objectstorage-creds
+        - name: minio-creds
           secret:
-            secretName: objectstorage-keyfile
+            secretName: minio-creds
 {{- end }}
