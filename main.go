@@ -1,11 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
+	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 const (
@@ -17,10 +19,16 @@ const (
 
 func main() {
 	log.Println("INFO: Starting registry...")
-	mEndpoint := os.Getenv(minioEndpointEnvVar)
 	os.Setenv("REGISTRY_STORAGE", "s3")
-	os.Setenv("REGISTRY_STORAGE_S3_BACKEND", "minio")
-	os.Setenv("REGISTRY_STORAGE_S3_REGIONENDPOINT", fmt.Sprintf("http://%s", mEndpoint))
+	mEndpoint := os.Getenv(minioEndpointEnvVar)
+	os.Setenv("REGISTRY_STORAGE_S3_REGIONENDPOINT", mEndpoint)
+	region := "us-east-1" //region is required in distribution
+	if endpointURL, err := url.Parse(mEndpoint); err == nil {
+		if endpointURL.Hostname() != "" && net.ParseIP(endpointURL.Hostname()) == nil {
+			region = strings.Split(endpointURL.Hostname(), ".")[0]
+		}
+	}
+	os.Setenv("REGISTRY_STORAGE_S3_REGION", region)
 
 	if accesskey, err := ioutil.ReadFile("/var/run/secrets/drycc/minio/creds/accesskey"); err != nil {
 		log.Fatal(err)
@@ -44,8 +52,6 @@ func main() {
 	} else {
 		os.Setenv("REGISTRY_STORAGE_S3_BUCKET", "registry") // default bucket
 	}
-
-	os.Setenv("REGISTRY_STORAGE_S3_REGION", "us-east-1")
 
 	// run /bin/create_bucket
 	cmd := exec.Command("/bin/create_bucket")
