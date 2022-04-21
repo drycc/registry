@@ -52,18 +52,11 @@ spec:
             port: 5000
           initialDelaySeconds: 1
           timeoutSeconds: 1
-        env:
-          - name: REGISTRY_STORAGE_DELETE_ENABLED
-            value: "true"
-          - name: REGISTRY_LOG_LEVEL
-            value: info
         ports:
           - containerPort: 5000
         volumeMounts:
           - name: registry-storage
             mountPath: /var/lib/registry
-          - name: minio-creds
-            mountPath: /var/run/secrets/drycc/minio/creds
       securityContext:
         fsGroup: 1001
         runAsGroup: 1001
@@ -71,7 +64,4 @@ spec:
       volumes:
         - name: registry-storage
           emptyDir: {}
-        - name: minio-creds
-          secret:
-            secretName: minio-creds
 {{- end }}

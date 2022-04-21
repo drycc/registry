@@ -2,16 +2,12 @@
 
 set -eoxf pipefail
 
-CURRENT_DIR=$(cd "$(dirname "$0")"; pwd)
-
-mkdir -p "${CURRENT_DIR}"/tmp/aws-user
-echo "us-east-1" > "${CURRENT_DIR}"/tmp/aws-user/region
-echo "registry-bucket" > "${CURRENT_DIR}"/tmp/aws-user/registry-bucket
-echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/accesskey
-echo "1234567890123456789012345678901234567890" > "${CURRENT_DIR}"/tmp/aws-user/secretkey
+s3Accesskey=drycc
+s3Secretkey=123456789
 
 MINIO_JOB=$(docker run -d --name minio \
-  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/minio/creds \
+  -e DRYCC_MINIO_ACCESSKEY=$s3Accesskey \
+  -e DRYCC_MINIO_SECRETKEY=$s3Secretkey \
   "${DEV_REGISTRY}"/drycc/minio:canary server /data/minio/ --console-address :9001)
 
 sleep 5
@@ -21,8 +17,16 @@ MINIO_IP=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" "${MINIO_J
 
 JOB=$(docker run --add-host minio:"${MINIO_IP}" \
   -d \
+  -p 5000:5000 \
+  -e REGISTRY_HTTP_SECRET=drycc \
+  -e DRYCC_REGISTRY_REDIRECT=false \
+  -e DRYCC_REGISTRY_USERNAME=admin \
+  -e DRYCC_REGISTRY_PASSWORD=admin \
+  -e DRYCC_MINIO_LOOKUP=path \
+  -e DRYCC_MINIO_BUCKET=registry \
   -e DRYCC_MINIO_ENDPOINT=http://minio:9000 \
-  -v "${CURRENT_DIR}"/tmp/aws-user:/var/run/secrets/drycc/minio/creds \
+  -e DRYCC_MINIO_ACCESSKEY=$s3Accesskey \
+  -e DRYCC_MINIO_SECRETKEY=$s3Secretkey \
   "$1")
 
 # let the registry run for a few seconds

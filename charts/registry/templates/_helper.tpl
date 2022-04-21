@@ -1,11 +1,53 @@
 {{- define "registry.envs" -}}
-{{- if eq .Values.global.minioLocation "on-cluster" }}
+- name: REGISTRY_STORAGE_DELETE_ENABLED
+  value: "true"
+- name: REGISTRY_LOG_LEVEL
+  value: info
+- name: "REGISTRY_HTTP_SECRET"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: secret
+- name: "DRYCC_REGISTRY_REDIRECT"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: redirect
+- name: "DRYCC_REGISTRY_USERNAME"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: username
+- name: "DRYCC_REGISTRY_PASSWORD"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: password
+- name: "DRYCC_MINIO_LOOKUP"
+  valueFrom:
+    secretKeyRef:
+      name: minio-creds
+      key: lookup
+- name: "DRYCC_MINIO_BUCKET"
+  valueFrom:
+    secretKeyRef:
+      name: minio-creds
+      key: registry-bucket
 - name: "DRYCC_MINIO_ENDPOINT"
-  value: http://${DRYCC_MINIO_SERVICE_HOST}:${DRYCC_MINIO_SERVICE_PORT}
-{{- else }}
-- name: "DRYCC_MINIO_ENDPOINT"
-  value: "{{ .Values.minio.endpoint }}"
-{{- end }}
+  valueFrom:
+    secretKeyRef:
+      name: minio-creds
+      key: endpoint
+- name: "DRYCC_MINIO_ACCESSKEY"
+  valueFrom:
+    secretKeyRef:
+      name: minio-creds
+      key: accesskey
+- name: "DRYCC_MINIO_SECRETKEY"
+  valueFrom:
+    secretKeyRef:
+      name: minio-creds
+      key: secretkey
 {{- end }}
 
 {{/* Generate registry deployment limits */}}

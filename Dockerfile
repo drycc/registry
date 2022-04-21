@@ -17,15 +17,15 @@ ENV DRYCC_UID=1001 \
   REGISTRY_VERSION="2.8.0"
 
 COPY rootfs/bin/ /bin/
-COPY rootfs/config-example.yml /etc/docker/registry/config.yml
 COPY --from=build /usr/local/bin/registry /opt/registry/bin/registry
 
 RUN groupadd drycc --gid ${DRYCC_GID} \
   && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR} \
+  && install-packages apache2-utils \
   && install-stack jq $JQ_VERSION \
   && install-stack mc $MC_VERSION \
   && install-stack registry $REGISTRY_VERSION \
-  && chmod +x /bin/create_bucket /bin/normalize_storage \
+  && chmod +x /bin/init_registry \
   && rm -rf \
       /usr/share/doc \
       /usr/share/man \
@@ -41,6 +41,8 @@ RUN groupadd drycc --gid ${DRYCC_GID} \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/EBC* \
   && mkdir -p /usr/share/man/man{1..8} \
   && chown -R ${DRYCC_GID}:${DRYCC_UID} ${DRYCC_HOME_DIR}
+
+COPY --chown=${DRYCC_GID}:${DRYCC_UID} rootfs/config-example.yml /opt/drycc/registry/etc/config.yml
 
 USER ${DRYCC_UID}
 VOLUME ["${DRYCC_HOME_DIR}"]
