@@ -43,6 +43,7 @@ RUN groupadd drycc --gid ${DRYCC_GID} \
   && chown -R ${DRYCC_GID}:${DRYCC_UID} ${DRYCC_HOME_DIR}
 
 COPY --chown=${DRYCC_GID}:${DRYCC_UID} rootfs/config-example.yml /opt/drycc/registry/etc/config.yml
+ENV DRYCC_REGISTRY_CONFIG /opt/drycc/registry/etc/config.yml
 
 USER ${DRYCC_UID}
 VOLUME ["${DRYCC_HOME_DIR}"]

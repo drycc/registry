@@ -11,15 +11,15 @@ import (
 
 const (
 	registryBinary         = "/opt/drycc/registry/bin/registry"
-	registryConfig         = "/opt/drycc/registry/etc/config.yml"
 	registryHtpasswd       = "/opt/drycc/registry/etc/htpasswd"
+	registryConfigEnvVar   = "DRYCC_REGISTRY_CONFIG"
 	registryRedirectEnvVar = "DRYCC_REGISTRY_REDIRECT"
 	minioLookupEnvVar      = "DRYCC_MINIO_LOOKUP"
 	minioBucketEnvVar      = "DRYCC_MINIO_BUCKET"
 	minioEndpointEnvVar    = "DRYCC_MINIO_ENDPOINT"
 	minioAccesskeyEnvVar   = "DRYCC_MINIO_ACCESSKEY"
 	minioSecretkeyEnvVar   = "DRYCC_MINIO_SECRETKEY"
-	command                = "serve"
+	defaultCommand         = "serve"
 )
 
 func main() {
@@ -61,8 +61,12 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		log.Fatal("Error creating the registry bucket: ", err)
 	}
+	if len(os.Args) > 1 {
+		cmd = exec.Command(registryBinary, os.Args[1:]...)
+	} else {
+		cmd = exec.Command(registryBinary, defaultCommand, os.Getenv(registryConfigEnvVar))
+	}
 
-	cmd = exec.Command(registryBinary, command, registryConfig)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {

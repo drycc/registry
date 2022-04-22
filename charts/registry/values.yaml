@@ -4,6 +4,7 @@ imageTag: "canary"
 imageRegistry: "registry.drycc.cc"
 # limitsCpu: "100m"
 # limitsMemory: "50Mi"
+concurrencyPolicy: "Replace"
 
 # Service
 service:

@@ -1,4 +1,5 @@
-{{- define "registry.envs" -}}
+{{- define "registry.envs" }}
+env:
 - name: REGISTRY_STORAGE_DELETE_ENABLED
   value: "true"
 - name: REGISTRY_LOG_LEVEL
