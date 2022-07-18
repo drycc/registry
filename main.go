@@ -14,18 +14,18 @@ const (
 	registryHtpasswd       = "/opt/drycc/registry/etc/htpasswd"
 	registryConfigEnvVar   = "DRYCC_REGISTRY_CONFIG"
 	registryRedirectEnvVar = "DRYCC_REGISTRY_REDIRECT"
-	minioLookupEnvVar      = "DRYCC_MINIO_LOOKUP"
-	minioBucketEnvVar      = "DRYCC_MINIO_BUCKET"
-	minioEndpointEnvVar    = "DRYCC_MINIO_ENDPOINT"
-	minioAccesskeyEnvVar   = "DRYCC_MINIO_ACCESSKEY"
-	minioSecretkeyEnvVar   = "DRYCC_MINIO_SECRETKEY"
+	storageLookupEnvVar    = "DRYCC_STORAGE_LOOKUP"
+	storageBucketEnvVar    = "DRYCC_STORAGE_BUCKET"
+	storageEndpointEnvVar  = "DRYCC_STORAGE_ENDPOINT"
+	storageAccesskeyEnvVar = "DRYCC_STORAGE_ACCESSKEY"
+	storageSecretkeyEnvVar = "DRYCC_STORAGE_SECRETKEY"
 	defaultCommand         = "serve"
 )
 
 func main() {
 	log.Println("INFO: Starting registry...")
 	os.Setenv("REGISTRY_STORAGE", "s3")
-	mEndpoint := os.Getenv(minioEndpointEnvVar)
+	mEndpoint := os.Getenv(storageEndpointEnvVar)
 	os.Setenv("REGISTRY_STORAGE_S3_REGIONENDPOINT", mEndpoint)
 
 	region := "us-east-1" //region is required in distribution
@@ -36,12 +36,12 @@ func main() {
 	}
 	os.Setenv("REGISTRY_STORAGE_S3_REGION", region)
 
-	os.Setenv("REGISTRY_STORAGE_S3_ACCESSKEY", os.Getenv(minioAccesskeyEnvVar))
-	os.Setenv("REGISTRY_STORAGE_S3_SECRETKEY", os.Getenv(minioSecretkeyEnvVar))
-	os.Setenv("REGISTRY_STORAGE_S3_BUCKET", os.Getenv(minioBucketEnvVar))
+	os.Setenv("REGISTRY_STORAGE_S3_ACCESSKEY", os.Getenv(storageAccesskeyEnvVar))
+	os.Setenv("REGISTRY_STORAGE_S3_SECRETKEY", os.Getenv(storageSecretkeyEnvVar))
+	os.Setenv("REGISTRY_STORAGE_S3_BUCKET", os.Getenv(storageBucketEnvVar))
 	os.Setenv("REGISTRY_STORAGE_S3_ROOTDIRECTORY", "/registry")
 
-	if os.Getenv(minioLookupEnvVar) == "path" {
+	if os.Getenv(storageLookupEnvVar) == "path" {
 		os.Setenv("REGISTRY_STORAGE_S3_FORCEPATHSTYLE", "true")
 	}
 
