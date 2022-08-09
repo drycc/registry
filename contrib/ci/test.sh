@@ -8,7 +8,7 @@ s3Secretkey=123456789
 STORAGE_JOB=$(docker run -d --name storage \
   -e DRYCC_STORAGE_ACCESSKEY=$s3Accesskey \
   -e DRYCC_STORAGE_SECRETKEY=$s3Secretkey \
-  "${DEV_REGISTRY}"/drycc/storage:canary server /data/storage/ --console-address :9001)
+  "${DEV_REGISTRY}"/drycc/storage:canary minio server /data/storage/ --console-address :9001)
 
 sleep 5
 docker logs "${STORAGE_JOB}"
