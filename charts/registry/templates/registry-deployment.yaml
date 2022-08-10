@@ -43,18 +43,32 @@ spec:
         imagePullPolicy: {{.Values.imagePullPolicy}}
         {{- include "registry.limits" . | indent 8 }}
         {{- include "registry.envs" . | indent 8 }}
+        startupProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
         livenessProbe:
           httpGet:
             path: /
             port: 5000
-          initialDelaySeconds: 1
+          initialDelaySeconds: 30
+          periodSeconds: 5
           timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
         readinessProbe:
           httpGet:
             path: /
             port: 5000
-          initialDelaySeconds: 1
+          initialDelaySeconds: 30
+          periodSeconds: 5
           timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
         ports:
           - containerPort: 5000
         volumeMounts:
