@@ -22,6 +22,9 @@ podAntiAffinityPreset:
   values:
   - "drycc-registry"
 
+# registry replicas
+replicas: 1
+
 concurrencyPolicy: "Replace"
 
 # Service
