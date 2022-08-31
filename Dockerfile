@@ -40,9 +40,9 @@ RUN groupadd drycc --gid ${DRYCC_GID} \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/IBM* \
       /usr/lib/`echo $(uname -m)`-linux-gnu/gconv/EBC* \
   && mkdir -p /usr/share/man/man{1..8} \
-  && chown -R ${DRYCC_GID}:${DRYCC_UID} ${DRYCC_HOME_DIR}
+  && chown -R ${DRYCC_UID}:${DRYCC_GID} ${DRYCC_HOME_DIR}
 
-COPY --chown=${DRYCC_GID}:${DRYCC_UID} rootfs/config-example.yml /opt/drycc/registry/etc/config.yml
+COPY --chown=${DRYCC_UID}:${DRYCC_GID} rootfs/config-example.yml /opt/drycc/registry/etc/config.yml
 ENV DRYCC_REGISTRY_CONFIG /opt/drycc/registry/etc/config.yml
 
 USER ${DRYCC_UID}
