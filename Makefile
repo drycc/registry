@@ -47,7 +47,7 @@ build-binary:
 	$(call check-static-binary,$(BINDIR)/${SHORT_NAME})
 	${DEV_ENV_CMD} upx -9 --brute $(BINDIR)/${SHORT_NAME}
 
-test: check-docker test-style
+test: check-docker docker-build test-style
 	contrib/ci/test.sh ${IMAGE}
 
 test-style:
