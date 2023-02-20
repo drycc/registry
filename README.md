@@ -1,6 +1,6 @@
 # Drycc Registry v2
 
-[![Build Status](https://drone.drycc.cc/api/badges/drycc/registry/status.svg)](https://drone.drycc.cc/drycc/registry)
+[![Build Status](https://woodpecker.drycc.cc/api/badges/drycc/registry/status.svg)](https://woodpecker.drycc.cc/drycc/registry)
 [![Go Report Card](https://goreportcard.com/badge/github.com/drycc/registry)](https://goreportcard.com/report/github.com/drycc/registry)
 
 
