@@ -7,14 +7,14 @@ RUN export GO111MODULE=on \
   && upx -9 --brute /usr/local/bin/registry
 
 
-FROM registry.drycc.cc/drycc/base:bullseye
+FROM registry.drycc.cc/drycc/base:bookworm
 
 ENV DRYCC_UID=1001 \
   DRYCC_GID=1001 \
   DRYCC_HOME_DIR=/var/lib/registry \
   JQ_VERSION="1.6" \
-  MC_VERSION="2022.08.28.20.08.11" \
-  REGISTRY_VERSION="2.8.0"
+  MC_VERSION="2023.06.15.15.08.26" \
+  REGISTRY_VERSION="2.8.2"
 
 COPY rootfs/bin/ /bin/
 COPY --from=build /usr/local/bin/registry /opt/registry/bin/registry
