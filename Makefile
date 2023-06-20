@@ -36,11 +36,11 @@ build: check-docker
 # For cases where we're building from local
 # We also alter the RC file to set the image name.
 docker-build: check-docker
-	docker build ${DOCKER_BUILD_FLAGS} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} .
+	docker build ${DOCKER_BUILD_FLAGS} --build-arg CODENAME=${CODENAME} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} .
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
 
 docker-buildx: check-docker
-	docker buildx build --platform ${PLATFORM} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} . --push
+	docker buildx build --build-arg CODENAME=${CODENAME} --platform ${PLATFORM} -t ${IMAGE} --build-arg LDFLAGS=${LDFLAGS} . --push
 
 build-binary:
 	${DEV_ENV_CMD} go build -ldflags ${LDFLAGS} -o $(BINDIR)/${SHORT_NAME} main.go
