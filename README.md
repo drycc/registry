@@ -12,11 +12,11 @@ We welcome your input! If you have feedback, please submit an [issue][issues]. I
 
 # About
 
-The registry is a [Docker registry](https://docs.docker.com/registry/) component for use in Kubernetes. While it's intended for use inside of the Drycc open source [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service), it's flexible enough to be used as a standalone pod on any Kubernetes cluster.
+The registry is a [Container registry](https://github.com/distribution/distribution) component for use in Kubernetes. While it's intended for use inside of the Drycc open source [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service), it's flexible enough to be used as a standalone pod on any Kubernetes cluster.
 
-If you decide to use this component standalone, you can host your own Docker registry in your own Kubernetes cluster.
+If you decide to use this component standalone, you can host your own Container registry in your own Kubernetes cluster.
 
-The Docker image that this repository builds is based on [the official Docker v2 registry image](https://github.com/docker/distribution).
+The Container image that this repository builds is based on [the official Container v2 registry image](https://github.com/distribution/distribution).
 
 # Development
 
@@ -49,7 +49,7 @@ $ export IMAGE_PREFIX=youruser/             # if using Quay or Dockerhub
 To build and push the image run:
 
 ```console
-$ make docker-build docker-push
+$ make podman-build podman-push
 ```
 
 To deploy the image via patching the registry deployment run:

@@ -5,17 +5,17 @@ set -eoxf pipefail
 s3Accesskey=drycc
 s3Secretkey=123456789
 
-STORAGE_JOB=$(docker run -d --name storage \
+STORAGE_JOB=$(podman run -d --name storage \
   -e DRYCC_STORAGE_ACCESSKEY=$s3Accesskey \
   -e DRYCC_STORAGE_SECRETKEY=$s3Secretkey \
   "${DEV_REGISTRY}"/drycc/storage:canary minio server /data/storage/ --console-address :9001)
 
 sleep 5
-docker logs "${STORAGE_JOB}"
+podman logs "${STORAGE_JOB}"
 
-STORAGE_IP=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" "${STORAGE_JOB}")
+STORAGE_IP=$(podman inspect --format "{{ .NetworkSettings.IPAddress }}" "${STORAGE_JOB}")
 
-JOB=$(docker run --add-host storage:"${STORAGE_IP}" \
+JOB=$(podman run --add-host storage:"${STORAGE_IP}" \
   -d \
   -p 5000:5000 \
   -e REGISTRY_HTTP_SECRET=drycc \
@@ -32,6 +32,6 @@ JOB=$(docker run --add-host storage:"${STORAGE_IP}" \
 # let the registry run for a few seconds
 sleep 5
 # check that the registry is still up
-docker logs "${JOB}"
-docker ps -q --no-trunc=true | grep "${JOB}"
-docker rm -f "${JOB}" "${STORAGE_JOB}"
+podman logs "${JOB}"
+podman ps -q --no-trunc=true | grep "${JOB}"
+podman rm -f "${JOB}" "${STORAGE_JOB}"
