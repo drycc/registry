@@ -10,10 +10,7 @@ metadata:
   labels:
     heritage: drycc
 spec:
-  ports:
-    - name: http
-      port: 80
-      targetPort: 5000
+  clusterIP: None
   selector:
     app: drycc-registry
   sessionAffinity: ClientIP  
