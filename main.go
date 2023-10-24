@@ -39,7 +39,6 @@ func main() {
 	os.Setenv("REGISTRY_STORAGE_S3_ACCESSKEY", os.Getenv(storageAccesskeyEnvVar))
 	os.Setenv("REGISTRY_STORAGE_S3_SECRETKEY", os.Getenv(storageSecretkeyEnvVar))
 	os.Setenv("REGISTRY_STORAGE_S3_BUCKET", os.Getenv(storageBucketEnvVar))
-	os.Setenv("REGISTRY_STORAGE_S3_ROOTDIRECTORY", "/registry")
 
 	if os.Getenv(storageLookupEnvVar) == "path" {
 		os.Setenv("REGISTRY_STORAGE_S3_FORCEPATHSTYLE", "true")
@@ -50,6 +49,13 @@ func main() {
 	} else {
 		os.Setenv("REGISTRY_STORAGE_REDIRECT_DISABLE", "true")
 	}
+	// set default env
+	os.Setenv("REGISTRY_STORAGE_S3_V4AUTH", "true")
+	os.Setenv("REGISTRY_STORAGE_S3_SECURE", "false")
+	os.Setenv("REGISTRY_STORAGE_S3_SKIPVERIFY", "true")
+	os.Setenv("REGISTRY_STORAGE_DELETE_ENABLED", "true")
+	os.Setenv("REGISTRY_VALIDATION_DISABLED", "true")
+	os.Setenv("REGISTRY_STORAGE_S3_ROOTDIRECTORY", "/registry")
 
 	// run /bin/init_registry
 	os.Setenv("REGISTRY_AUTH", "htpasswd")

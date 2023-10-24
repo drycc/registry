@@ -22,6 +22,8 @@ podAntiAffinityPreset:
 
 # registry replicas
 replicas: 1
+# registry storage redirect
+redirect: false
 
 concurrencyPolicy: "Replace"
 
