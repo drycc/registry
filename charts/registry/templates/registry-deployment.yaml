@@ -71,6 +71,7 @@ spec:
           failureThreshold: 5
         ports:
         - containerPort: 5000
+          name: http
         volumeMounts:
         - name: registry-storage
           mountPath: /var/lib/registry

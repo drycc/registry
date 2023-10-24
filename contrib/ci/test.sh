@@ -47,5 +47,6 @@ echo -e "\\033[32m---> Waitting for ${REGISTRY_IP}:5000\\033[0m"
 wait-for-port --host="${REGISTRY_IP}" 5000
 echo -e "\\033[32m---> S3 service ${REGISTRY_IP}:5000 ready...\\033[0m"
 # check that the registry is still up
-podman logs "${JOB}"
-podman ps -q --no-trunc=true | grep "${JOB}"
+podman tag "$1" "${REGISTRY_IP}:5000/registry:canary"
+echo admin | podman login "${REGISTRY_IP}:5000" --tls-verify=false --username admin --password-stdin > /dev/null 2>&1
+podman push "${REGISTRY_IP}:5000/registry:canary" --tls-verify=false
