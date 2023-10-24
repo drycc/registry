@@ -5,8 +5,8 @@ ARG LDFLAGS
 ADD . /workspace
 RUN export GO111MODULE=on \
   && cd /workspace \
-  && CGO_ENABLED=0 init-stack go build -ldflags "${LDFLAGS}" -o /usr/local/bin/registry main.go \
-  && upx -9 --brute /usr/local/bin/registry
+  && CGO_ENABLED=0 init-stack go build -ldflags "${LDFLAGS}" -o /bin/boot main.go \
+  && upx -9 --brute /bin/boot
 
 
 FROM registry.drycc.cc/drycc/base:${CODENAME}
@@ -16,10 +16,10 @@ ENV DRYCC_UID=1001 \
   DRYCC_HOME_DIR=/var/lib/registry \
   JQ_VERSION="1.7" \
   MC_VERSION="2023.09.20.15.22.31" \
-  REGISTRY_VERSION="2.8.2"
+  REGISTRY_VERSION="2.8.3"
 
 COPY rootfs/bin/ /bin/
-COPY --from=build /usr/local/bin/registry /opt/registry/bin/registry
+COPY --from=build /bin/boot /bin/boot
 
 RUN groupadd drycc --gid ${DRYCC_GID} \
   && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR} \
@@ -49,5 +49,5 @@ ENV DRYCC_REGISTRY_CONFIG /opt/drycc/registry/etc/config.yml
 
 USER ${DRYCC_UID}
 VOLUME ["${DRYCC_HOME_DIR}"]
-CMD ["/opt/registry/bin/registry"]
+CMD ["/bin/boot"]
 EXPOSE 5000
