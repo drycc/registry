@@ -70,10 +70,10 @@ spec:
           successThreshold: 1
           failureThreshold: 5
         ports:
-          - containerPort: 5000
+        - containerPort: 5000
         volumeMounts:
-          - name: registry-storage
-            mountPath: /var/lib/registry
+        - name: registry-storage
+          mountPath: /var/lib/registry
       securityContext:
         fsGroup: 1001
         runAsGroup: 1001
