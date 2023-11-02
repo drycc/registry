@@ -32,10 +32,10 @@ spec:
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/python-dev:latest
         imagePullPolicy: {{.Values.imagePullPolicy}}
         args:
-          - netcat
-          - -v
-          - -u
-          - $(DRYCC_STORAGE_ENDPOINT)
+        - netcat
+        - -v
+        - -u
+        - $(DRYCC_STORAGE_ENDPOINT)
         {{- include "registry.envs" . | indent 8 }}
       containers:
       - name: drycc-registry
@@ -80,6 +80,6 @@ spec:
         runAsGroup: 1001
         runAsUser: 1001
       volumes:
-        - name: registry-storage
-          emptyDir: {}
+      - name: registry-storage
+        emptyDir: {}
 {{- end }}

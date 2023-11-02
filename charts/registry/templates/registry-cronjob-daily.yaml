@@ -23,19 +23,17 @@ spec:
             image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/python-dev:latest
             imagePullPolicy: {{.Values.imagePullPolicy}}
             args:
-              - netcat
-              - -v
-              - -u
-              - $(DRYCC_STORAGE_ENDPOINT)
+            - netcat
+            - -v
+            - -u
+            - $(DRYCC_STORAGE_ENDPOINT)
             {{- include "builder.envs" . | indent 12 }}
           containers:
           - image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
             imagePullPolicy: {{.Values.imagePullPolicy}}
             name: drycc-registry-garbage-collect
             args:
-            - /bin/bash
-            - -c
-            - /opt/registry/bin/registry
+            - /bin/boot
             - garbage-collect
             - $(DRYCC_REGISTRY_CONFIG)
             - --dry-run
