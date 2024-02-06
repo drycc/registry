@@ -13,9 +13,5 @@ spec:
   clusterIP: None
   selector:
     app: drycc-registry
-  ports:
-  - name: http
-    port: 5000
-    targetPort: 5000
   sessionAffinity: ClientIP  
 {{- end }}
