@@ -41,8 +41,13 @@ spec:
       - name: drycc-registry
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
+        {{- if .Values.diagnosticMode.enabled }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 10 }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 10 }}
+        {{- end }}
         {{- include "registry.limits" . | indent 8 }}
         {{- include "registry.envs" . | indent 8 }}
+        {{- if not .Values.diagnosticMode.enabled }}
         startupProbe:
           tcpSocket:
             port: 5000
@@ -69,6 +74,7 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 5
+        {{- end }}
         ports:
         - containerPort: 5000
           name: http

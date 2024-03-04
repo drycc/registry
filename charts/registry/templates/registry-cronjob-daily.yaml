@@ -32,11 +32,16 @@ spec:
           - image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
             imagePullPolicy: {{.Values.imagePullPolicy}}
             name: drycc-registry-garbage-collect
+            {{- if .Values.diagnosticMode.enabled }}
+            command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 14 }}
+            args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 14 }}
+            {{- else }}
             args:
             - /bin/boot
             - garbage-collect
             - $(DRYCC_REGISTRY_CONFIG)
             - --dry-run
             - --delete-untagged
+            {{- end }}
             {{- include "builder.envs" . | indent 12 }}
 {{- end }}
