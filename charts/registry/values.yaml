@@ -39,7 +39,7 @@ podAntiAffinityPreset:
 # registry replicas
 replicas: 1
 # registry storage redirect
-redirect: false
+redirect: "false"
 
 concurrencyPolicy: "Replace"
 
@@ -47,3 +47,6 @@ concurrencyPolicy: "Replace"
 service:
   # Provide any additional service annotations
   annotations: {}
+
+global:
+  registryLocation: "on-cluster"
