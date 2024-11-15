@@ -14,8 +14,8 @@ FROM registry.drycc.cc/drycc/base:${CODENAME}
 ENV DRYCC_UID=1001 \
   DRYCC_GID=1001 \
   DRYCC_HOME_DIR=/var/lib/registry \
-  JQ_VERSION="1.7" \
-  MC_VERSION="2023.09.20.15.22.31" \
+  JQ_VERSION="1.7.1" \
+  MC_VERSION="2024.11.05.11.29.45" \
   REGISTRY_VERSION="2.8.3"
 
 COPY rootfs/bin/ /bin/
