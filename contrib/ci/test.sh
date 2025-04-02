@@ -2,22 +2,20 @@
 
 set -eoxf pipefail
 
-BASE_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 DRYCC_STORAGE_ACCESSKEY=f4c4281665bc11ee8e0400163e04a9cd
 DRYCC_STORAGE_SECRETKEY=f4c4281665bc11ee8e0400163e04a9cd
 
 
-STORAGE_JOB=$(podman run -d --entrypoint init-stack -p 8333:8333 \
-  -v "${BASE_DIR}":/tmp/weed \
-  -e DRYCC_STORAGE_ACCESSKEY="${DRYCC_STORAGE_ACCESSKEY}" \
-  -e DRYCC_STORAGE_SECRETKEY="${DRYCC_STORAGE_SECRETKEY}" \
-  "${DEV_REGISTRY}"/drycc/storage:canary /tmp/weed/start-s3.sh)
+STORAGE_JOB=$(podman run -d --entrypoint init-stack \
+  -e MINIO_ROOT_USER="${DRYCC_STORAGE_ACCESSKEY}" \
+  -e MINIO_ROOT_PASSWORD="${DRYCC_STORAGE_SECRETKEY}" \
+  "${DEV_REGISTRY}"/drycc/storage:canary minio server /data)
 
 # wait for port
 STORAGE_IP=$(podman inspect --format "{{ .NetworkSettings.IPAddress }}" "${STORAGE_JOB}")
-echo -e "\\033[32m---> Waitting for ${STORAGE_IP}:8333\\033[0m"
-wait-for-port --host="${STORAGE_IP}" 8333
-echo -e "\\033[32m---> S3 service ${STORAGE_IP}:8333 ready...\\033[0m"
+echo -e "\\033[32m---> Waitting for ${STORAGE_IP}:9000\\033[0m"
+wait-for-port --host="${STORAGE_IP}" 9000
+echo -e "\\033[32m---> S3 service ${STORAGE_IP}:9000 ready...\\033[0m"
 podman logs "${STORAGE_JOB}"
 
 JOB=$(podman run -d \
@@ -27,7 +25,7 @@ JOB=$(podman run -d \
   -e DRYCC_REGISTRY_PASSWORD=admin \
   -e DRYCC_STORAGE_LOOKUP=path \
   -e DRYCC_STORAGE_BUCKET=registry \
-  -e DRYCC_STORAGE_ENDPOINT="http://${STORAGE_IP}:8333" \
+  -e DRYCC_STORAGE_ENDPOINT="http://${STORAGE_IP}:9000" \
   -e DRYCC_STORAGE_ACCESSKEY="${DRYCC_STORAGE_ACCESSKEY}" \
   -e DRYCC_STORAGE_SECRETKEY="${DRYCC_STORAGE_SECRETKEY}" \
   "$1")
