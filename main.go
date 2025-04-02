@@ -67,6 +67,8 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		log.Fatal("Error creating the registry bucket: ", err)
 	}
+	// avoid conflicts with env variables
+	os.Unsetenv("REGISTRY_VERSION")
 	if len(os.Args) > 1 {
 		cmd = exec.Command(registryBinary, os.Args[1:]...)
 	} else {
