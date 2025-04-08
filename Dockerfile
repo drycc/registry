@@ -15,7 +15,7 @@ ENV DRYCC_UID=1001 \
   DRYCC_GID=1001 \
   DRYCC_HOME_DIR=/var/lib/registry \
   JQ_VERSION="1.7.1" \
-  MC_VERSION="2025.03.12.17.29.24" \
+  MC_VERSION="2025.04.03.17.07.56" \
   REGISTRY_VERSION="3.0.0"
 
 COPY rootfs/bin/ /bin/
