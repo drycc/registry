@@ -12,7 +12,15 @@ We welcome your input! If you have feedback, please submit an [issue][issues]. I
 
 # About
 
-The registry is a [Container registry](https://github.com/distribution/distribution) component for use in Kubernetes. While it's intended for use inside of the Drycc open source [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service), it's flexible enough to be used as a standalone pod on any Kubernetes cluster.
+Registry consists of two components, namely the proxy component and the registry component.
+
+## Proxy
+
+The proxy component is a proxy deployed on every Kubernetes worker node, proxying all requests to the Drycc Workflow [registry][registry]. This allows the worker nodes daemons to communicate to the registry over localhost, bypassing the need for adding the `--insecure-registry` flag to the daemons.
+
+## Registry
+
+The registry component is a [Container registry](https://github.com/distribution/distribution) component for use in Kubernetes. While it's intended for use inside of the Drycc open source [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service), it's flexible enough to be used as a standalone pod on any Kubernetes cluster.
 
 If you decide to use this component standalone, you can host your own Container registry in your own Kubernetes cluster.
 

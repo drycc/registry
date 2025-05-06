@@ -40,6 +40,8 @@ podAntiAffinityPreset:
 replicas: 1
 # registry storage redirect
 redirect: "false"
+# host port for the registry proxy in the daemonset
+proxyPort: 5555
 
 concurrencyPolicy: "Replace"
 

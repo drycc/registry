@@ -1,32 +1,30 @@
 {{- if eq .Values.global.registryLocation "on-cluster" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
-  name: drycc-registry
+  name: drycc-registry-proxy
   labels:
     heritage: drycc
   annotations:
     component.drycc.cc/version: {{ .Values.imageTag }}
 spec:
-  replicas: {{ .Values.replicas }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+  updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: drycc-registry
+      app: drycc-registry-proxy
+      heritage: drycc
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
-        app: drycc-registry
+      name: drycc-registry-proxy
+      labels:
+        heritage: drycc
+        app: drycc-registry-proxy
     spec:
-      affinity:
-        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.podAffinityPreset.type "component" "" "extraMatchLabels" .Values.podAffinityPreset.extraMatchLabels "topologyKey" "" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.podAntiAffinityPreset.type "component" "" "extraMatchLabels" .Values.podAntiAffinityPreset.extraMatchLabels "topologyKey" "" "context" $) | nindent 10 }}
-        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.nodeAffinityPreset.type "key" .Values.nodeAffinityPreset.key "values" .Values.nodeAffinityPreset.values ) | nindent 10 }}
-      serviceAccount: drycc-registry
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsUser: 1001
       initContainers:
       - name: drycc-registry-init
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/python-dev:latest
@@ -34,11 +32,16 @@ spec:
         args:
         - netcat
         - -v
-        - -u
-        - $(DRYCC_STORAGE_ENDPOINT)
-        {{- include "registry.envs" . | indent 8 }}
+        - -a
+        - $(DRYCC_REGISTRY_HOST)
+        env:
+        - name: "DRYCC_REGISTRY_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: host
       containers:
-      - name: drycc-registry
+      - name: drycc-registry-proxy
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
         {{- if .Values.diagnosticMode.enabled }}
@@ -46,14 +49,23 @@ spec:
         args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 10 }}
         {{- else }}
         args:
-        - start-registry
+        - start-proxy
         {{- end }}
-        {{- include "registry.limits" . | indent 8 }}
-        {{- include "registry.envs" . | indent 8 }}
+        {{- if or (.Values.limitsCpu) (.Values.limitsMemory)}}
+        resources:
+          limits:
+            {{- if (.Values.limitsCpu) }}
+            cpu: {{.Values.limitsCpu}}
+            {{- end}}
+            {{- if (.Values.limitsMemory) }}
+            memory: {{.Values.limitsMemory}}
+            {{- end}}
+        {{- end}}
         {{- if not .Values.diagnosticMode.enabled }}
         startupProbe:
-          tcpSocket:
-            port: 5000
+          httpGet:
+            path: /
+            port: 8080
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 1
@@ -62,7 +74,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 5000
+            port: 8080
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 1
@@ -71,24 +83,30 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 5000
+            port: 8080
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 5
         {{- end }}
+        env:
+        - name: "DRYCC_REGISTRY_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: host
+        - name: "DRYCC_REGISTRY_USERNAME"
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: username
+        - name: "DRYCC_REGISTRY_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: password
         ports:
-        - containerPort: 5000
-          name: http
-        volumeMounts:
-        - name: registry-storage
-          mountPath: /var/lib/registry
-      securityContext:
-        fsGroup: 1001
-        runAsGroup: 1001
-        runAsUser: 1001
-      volumes:
-      - name: registry-storage
-        emptyDir: {}
+        - containerPort: 8080
+          hostPort: {{.Values.proxyPort}}
 {{- end }}

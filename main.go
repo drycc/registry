@@ -57,11 +57,11 @@ func main() {
 	os.Setenv("REGISTRY_VALIDATION_DISABLED", "true")
 	os.Setenv("REGISTRY_STORAGE_S3_ROOTDIRECTORY", "/registry")
 
-	// run /bin/init_registry
+	// run /bin/init-registry
 	os.Setenv("REGISTRY_AUTH", "htpasswd")
 	os.Setenv("REGISTRY_AUTH_HTPASSWD_REALM", "basic-realm")
 	os.Setenv("REGISTRY_AUTH_HTPASSWD_PATH", registryHtpasswd)
-	cmd := exec.Command("/bin/init_registry")
+	cmd := exec.Command("/bin/init-registry")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {

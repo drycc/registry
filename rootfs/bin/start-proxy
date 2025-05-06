@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+REGISTRY_HOST=${DRYCC_REGISTRY_HOST:?no host}
+AUTHORIZATION=$(echo -ne "${DRYCC_REGISTRY_USERNAME:? no username}":"${DRYCC_REGISTRY_PASSWORD:? no password}" | base64 -w 0)
+
+cat /opt/drycc/nginx/conf/registry.conf.tpl > /opt/drycc/nginx/conf/registry.conf
+sed -i "s#%REGISTRY_HOST%#${REGISTRY_HOST}#g" /opt/drycc/nginx/conf/registry.conf
+sed -i "s#%AUTHORIZATION%#${AUTHORIZATION}#g" /opt/drycc/nginx/conf/registry.conf
+
+# wait for registry to come online
+while ! curl -sS "$REGISTRY_HOST" &>/dev/null; do
+	echo "waiting for the registry (%s) to come online..."
+	echo "$REGISTRY_HOST"
+	sleep 1
+done
+
+echo "starting registry-proxy..."
+exec nginx -g "daemon off;"
