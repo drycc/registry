@@ -19,7 +19,6 @@ echo -e "\\033[32m---> S3 service ${STORAGE_IP}:9000 ready...\\033[0m"
 podman logs "${STORAGE_JOB}"
 
 REGISTRY_JOB=$(podman run -d --rm \
-  -e REGISTRY_HTTP_SECRET=drycc \
   -e DRYCC_REGISTRY_REDIRECT=false \
   -e DRYCC_REGISTRY_USERNAME=admin \
   -e DRYCC_REGISTRY_PASSWORD=admin \

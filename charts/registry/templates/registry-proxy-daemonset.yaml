@@ -1,4 +1,3 @@
-{{- if eq .Values.global.registryLocation "on-cluster" }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -36,10 +35,7 @@ spec:
         - $(DRYCC_REGISTRY_HOST)
         env:
         - name: "DRYCC_REGISTRY_HOST"
-          valueFrom:
-            secretKeyRef:
-              name: registry-secret
-              key: host
+          value: {{ printf "drycc-registry.%s.svc.%s:5000" .Release.Namespace .Values.global.clusterDomain }}
       containers:
       - name: drycc-registry-proxy
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
@@ -92,10 +88,7 @@ spec:
         {{- end }}
         env:
         - name: "DRYCC_REGISTRY_HOST"
-          valueFrom:
-            secretKeyRef:
-              name: registry-secret
-              key: host
+          value: {{ printf "drycc-registry.%s.svc.%s:5000" .Release.Namespace .Values.global.clusterDomain }}
         - name: "DRYCC_REGISTRY_USERNAME"
           valueFrom:
             secretKeyRef:
@@ -109,4 +102,3 @@ spec:
         ports:
         - containerPort: 8080
           hostPort: {{.Values.proxyPort}}
-{{- end }}

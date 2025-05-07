@@ -1,4 +1,3 @@
-{{- if eq .Values.global.registryLocation "on-cluster" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -91,4 +90,3 @@ spec:
       volumes:
       - name: registry-storage
         emptyDir: {}
-{{- end }}

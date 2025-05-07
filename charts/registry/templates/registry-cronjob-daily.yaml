@@ -1,4 +1,3 @@
-{{- if eq .Values.global.registryLocation "on-cluster" }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -45,4 +44,3 @@ spec:
               boot garbage-collect ${DRYCC_REGISTRY_CONFIG} --dry-run --delete-untagged
             {{- end }}
             {{- include "registry.envs" . | indent 12 }}
-{{- end }}
