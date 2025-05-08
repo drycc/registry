@@ -47,7 +47,8 @@ COPY --chown=${DRYCC_UID}:${DRYCC_GID} rootfs/bin/ /bin/
 COPY --chown=${DRYCC_UID}:${DRYCC_GID} rootfs/opt/drycc/nginx /opt/drycc/nginx
 COPY --chown=${DRYCC_UID}:${DRYCC_GID} rootfs/config-example.yml /opt/drycc/registry/etc/config.yml
 
-ENV DRYCC_REGISTRY_CONFIG /opt/drycc/registry/etc/config.yml
+ENV OTEL_TRACES_EXPORTER=none \
+  DRYCC_REGISTRY_CONFIG=/opt/drycc/registry/etc/config.yml
 
 USER ${DRYCC_UID}
 VOLUME ["${DRYCC_HOME_DIR}"]

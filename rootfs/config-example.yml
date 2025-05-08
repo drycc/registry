@@ -9,6 +9,11 @@ storage:
     rootdirectory: /var/lib/registry
 http:
   addr: :5000
+  debug:
+    addr: :9000
+    prometheus:
+      enabled: true
+      path: /metrics
   headers:
     X-Content-Type-Options: [nosniff]
 health:

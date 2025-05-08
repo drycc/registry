@@ -4,6 +4,11 @@ env:
   value: "true"
 - name: REGISTRY_LOG_LEVEL
   value: info
+- name: "REGISTRY_HTTP_SECRET"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: secret
 - name: "DRYCC_REGISTRY_REDIRECT"
   valueFrom:
     secretKeyRef:
