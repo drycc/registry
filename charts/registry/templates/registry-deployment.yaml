@@ -47,7 +47,10 @@ spec:
         args:
         - start-registry
         {{- end }}
-        {{- include "registry.limits" . | indent 8 }}
+        {{- with index .Values "resources" }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- include "registry.envs" . | indent 8 }}
         {{- if not .Values.diagnosticMode.enabled }}
         startupProbe:

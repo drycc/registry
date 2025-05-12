@@ -2,8 +2,6 @@ imageOrg: "drycc"
 imagePullPolicy: "Always"
 imageTag: "canary"
 imageRegistry: "registry.drycc.cc"
-# limitsCpu: "100m"
-# limitsMemory: "50Mi"
 
 ## Enable diagnostic mode
 ##
@@ -40,8 +38,25 @@ podAntiAffinityPreset:
 replicas: 1
 # registry storage redirect
 redirect: "false"
-# host port for the registry proxy in the daemonset
-proxyPort: 5555
+
+proxy:
+  # host port for the registry proxy in the daemonset
+  port: 5555
+  resources: {}
+  # limits:
+  #   cpu: 200m
+  #   memory: 50Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 30Mi
+
+resources: {}
+  # limits:
+  #   cpu: 200m
+  #   memory: 50Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 30Mi
 
 concurrencyPolicy: "Replace"
 
@@ -59,3 +74,11 @@ storage:
 service:
   # Provide any additional service annotations
   annotations: {}
+
+resources: {}
+  # limits:
+  #   cpu: 200m
+  #   memory: 50Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 30Mi
