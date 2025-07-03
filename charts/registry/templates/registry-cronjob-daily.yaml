@@ -41,6 +41,6 @@ spec:
             - -ec
             - |
               # run garbage collect
-              boot garbage-collect ${DRYCC_REGISTRY_CONFIG} --dry-run --delete-untagged
+              start-registry garbage-collect ${DRYCC_REGISTRY_CONFIG} --dry-run --delete-untagged
             {{- end }}
             {{- include "registry.envs" . | indent 12 }}
