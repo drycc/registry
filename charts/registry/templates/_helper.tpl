@@ -56,7 +56,7 @@ env:
 - name: "DRYCC_STORAGE_BUCKET"
   value: "registry"
 - name: "DRYCC_STORAGE_ENDPOINT"
-  value: {{ printf "http://drycc-storage.%s.svc.%s:9000" .Release.Namespace .Values.global.clusterDomain }}
+  value: http://drycc-storage:9000
 - name: "DRYCC_STORAGE_ACCESSKEY"
   valueFrom:
     secretKeyRef:

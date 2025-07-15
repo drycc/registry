@@ -35,7 +35,7 @@ spec:
         - $(DRYCC_REGISTRY_HOST)
         env:
         - name: "DRYCC_REGISTRY_HOST"
-          value: {{ printf "drycc-registry.%s.svc.%s:5000" .Release.Namespace .Values.global.clusterDomain }}
+          value: drycc-registry:5000
       containers:
       - name: drycc-registry-proxy
         image: {{.Values.imageRegistry}}/{{.Values.imageOrg}}/registry:{{.Values.imageTag}}
@@ -82,7 +82,7 @@ spec:
         {{- end }}
         env:
         - name: "DRYCC_REGISTRY_HOST"
-          value: {{ printf "drycc-registry.%s.svc.%s:5000" .Release.Namespace .Values.global.clusterDomain }}
+          value: drycc-registry:5000
         - name: "DRYCC_REGISTRY_USERNAME"
           valueFrom:
             secretKeyRef:
