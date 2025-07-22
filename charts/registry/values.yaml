@@ -61,11 +61,11 @@ resources: {}
 concurrencyPolicy: "Replace"
 
 # The following parameters will no longer use the built-in storage component.
-storageLookup: "auto"
 storageBucket: "builder"
 storageEndpoint: ""
 storageAccesskey: ""
 storageSecretkey: ""
+storagePathStyle: "auto"
 
 storage:
   enabled: true

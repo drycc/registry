@@ -14,11 +14,11 @@ const (
 	registryHtpasswd       = "/opt/drycc/registry/etc/htpasswd"
 	registryConfigEnvVar   = "DRYCC_REGISTRY_CONFIG"
 	registryRedirectEnvVar = "DRYCC_REGISTRY_REDIRECT"
-	storageLookupEnvVar    = "DRYCC_STORAGE_LOOKUP"
 	storageBucketEnvVar    = "DRYCC_STORAGE_BUCKET"
 	storageEndpointEnvVar  = "DRYCC_STORAGE_ENDPOINT"
 	storageAccesskeyEnvVar = "DRYCC_STORAGE_ACCESSKEY"
 	storageSecretkeyEnvVar = "DRYCC_STORAGE_SECRETKEY"
+	storagePathStyleEnvVar = "DRYCC_STORAGE_PATH_STYLE"
 	defaultCommand         = "serve"
 )
 
@@ -40,7 +40,7 @@ func main() {
 	os.Setenv("REGISTRY_STORAGE_S3_SECRETKEY", os.Getenv(storageSecretkeyEnvVar))
 	os.Setenv("REGISTRY_STORAGE_S3_BUCKET", os.Getenv(storageBucketEnvVar))
 
-	if os.Getenv(storageLookupEnvVar) == "path" {
+	if os.Getenv(storagePathStyleEnvVar) == "on" {
 		os.Setenv("REGISTRY_STORAGE_S3_FORCEPATHSTYLE", "true")
 	}
 

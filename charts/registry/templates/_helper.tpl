@@ -25,11 +25,6 @@ env:
       name: registry-secret
       key: password
 {{- if (.Values.storageEndpoint) }}
-- name: "DRYCC_STORAGE_LOOKUP"
-  valueFrom:
-    secretKeyRef:
-      name: registry-secret
-      key: storage-lookup
 - name: "DRYCC_STORAGE_BUCKET"
   valueFrom:
     secretKeyRef:
@@ -50,9 +45,12 @@ env:
     secretKeyRef:
       name: registry-secret
       key: storage-secretkey
+- name: "DRYCC_STORAGE_PATH_STYLE"
+  valueFrom:
+    secretKeyRef:
+      name: registry-secret
+      key: storage-path-style
 {{- else if .Values.storage.enabled  }}
-- name: "DRYCC_STORAGE_LOOKUP"
-  value: "path"
 - name: "DRYCC_STORAGE_BUCKET"
   value: "registry"
 - name: "DRYCC_STORAGE_ENDPOINT"
@@ -67,5 +65,7 @@ env:
     secretKeyRef:
       name: storage-creds
       key: secretkey
+- name: "DRYCC_STORAGE_PATH_STYLE"
+  value: "on"
 {{- end }}
 {{- end }}
