@@ -40,7 +40,7 @@ func main() {
 	os.Setenv("REGISTRY_STORAGE_S3_SECRETKEY", os.Getenv(storageSecretkeyEnvVar))
 	os.Setenv("REGISTRY_STORAGE_S3_BUCKET", os.Getenv(storageBucketEnvVar))
 
-	if os.Getenv(storagePathStyleEnvVar) == "on" {
+	if os.Getenv(storagePathStyleEnvVar) == "true" {
 		os.Setenv("REGISTRY_STORAGE_S3_FORCEPATHSTYLE", "true")
 	}
 

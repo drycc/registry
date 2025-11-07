@@ -2,19 +2,22 @@
 
 set -e
 
-mc alias set storage \
-  "${DRYCC_STORAGE_ENDPOINT}" \
-  "${DRYCC_STORAGE_ACCESSKEY}" \
-  "${DRYCC_STORAGE_SECRETKEY}" \
-  --path "${DRYCC_STORAGE_PATH_STYLE}"
 
-mc ping storage -x
-if ! mc admin info storage > /dev/null 2>&1; then
+mkdir -p ~/.config/rclone
+touch ~/.config/rclone/rclone.conf
+rclone config create storage s3 \
+  provider=Other \
+  access_key_id="${DRYCC_STORAGE_ACCESSKEY}" \
+  secret_access_key="${DRYCC_STORAGE_SECRETKEY}" \
+  endpoint="${DRYCC_STORAGE_ENDPOINT}" \
+  force_path_style="${DRYCC_STORAGE_PATH_STYLE:-true}" --no-output
+
+if ! rclone lsd storage: > /dev/null 2>&1; then
   sleep 9s
-else
-  mc ready storage
+  echo "waiting for object storage to become ready..."
 fi
-mc mb --ignore-existing storage/"${DRYCC_STORAGE_BUCKET}"
+
+rclone mkdir "storage:${DRYCC_STORAGE_BUCKET}"
 
 htpasswd -Bbn "${DRYCC_REGISTRY_USERNAME}" "${DRYCC_REGISTRY_PASSWORD}" > "${REGISTRY_AUTH_HTPASSWD_PATH}"
 echo "create ${REGISTRY_AUTH_HTPASSWD_PATH} success"

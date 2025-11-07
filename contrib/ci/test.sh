@@ -7,9 +7,9 @@ DRYCC_STORAGE_SECRETKEY=f4c4281665bc11ee8e0400163e04a9cd
 
 
 STORAGE_JOB=$(podman run -d --rm --entrypoint init-stack \
-  -e MINIO_ROOT_USER="${DRYCC_STORAGE_ACCESSKEY}" \
-  -e MINIO_ROOT_PASSWORD="${DRYCC_STORAGE_SECRETKEY}" \
-  "${DEV_REGISTRY}"/drycc/storage:canary minio server /data)
+  -e RUSTFS_ACCESS_KEY="${DRYCC_STORAGE_ACCESSKEY}" \
+  -e RUSTFS_SECRET_KEY="${DRYCC_STORAGE_SECRETKEY}" \
+  "${DEV_REGISTRY}"/drycc/storage:canary rustfs /data)
 
 # wait for port
 STORAGE_IP=$(podman inspect --format "{{ .NetworkSettings.IPAddress }}" "${STORAGE_JOB}")
@@ -26,7 +26,7 @@ REGISTRY_JOB=$(podman run -d --rm \
   -e DRYCC_STORAGE_ENDPOINT="http://${STORAGE_IP}:9000" \
   -e DRYCC_STORAGE_ACCESSKEY="${DRYCC_STORAGE_ACCESSKEY}" \
   -e DRYCC_STORAGE_SECRETKEY="${DRYCC_STORAGE_SECRETKEY}" \
-  -e DRYCC_STORAGE_PATH_STYLE=on \
+  -e DRYCC_STORAGE_PATH_STYLE=true \
   "$1" start-registry)
 
 # shellcheck disable=SC2317

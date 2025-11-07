@@ -66,6 +66,6 @@ env:
       name: storage-creds
       key: secretkey
 - name: "DRYCC_STORAGE_PATH_STYLE"
-  value: "on"
+  value: "true"
 {{- end }}
 {{- end }}
