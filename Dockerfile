@@ -14,10 +14,10 @@ FROM registry.drycc.cc/drycc/base:${CODENAME}
 ARG DRYCC_UID=1001 \
   DRYCC_GID=1001 \
   DRYCC_HOME_DIR=/var/lib/registry \
-  JQ_VERSION="1.7.1" \
-  NGINX_VERSION="1.29.1" \
-  RCLONE_VERSION="1.71.1" \
-  REGISTRY_VERSION="3.0.0"
+  JQ_VERSION="1.8.2" \
+  NGINX_VERSION="1.31.8" \
+  RCLONE_VERSION="1.75.2" \
+  REGISTRY_VERSION="3.1.2"
 
 RUN groupadd drycc --gid ${DRYCC_GID} \
   && useradd drycc -u ${DRYCC_UID} -g ${DRYCC_GID} -s /bin/bash -m -d ${DRYCC_HOME_DIR} \
